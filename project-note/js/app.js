@@ -98,8 +98,9 @@ search.addEventListener('input', () => {
     let noteCards = document.getElementsByClassName('noteCard');
     Array.from(noteCards).forEach((element) => {
         let cardTxt = element.getElementsByTagName('p')[0].innerText.toLowerCase();
+        let cardHeaderTxt = element.getElementsByTagName('h5')[0].innerText.toLowerCase();
         // console.log(cardTxt);
-        if(cardTxt.includes(inputVal)) {
+        if((cardTxt.includes(inputVal)) || (cardHeaderTxt.includes(inputVal))) {
             element.style.display = "block";
         } else {
             element.style.display = "none";
