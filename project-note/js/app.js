@@ -1,11 +1,14 @@
 console.log("This is new Note App");
-shoNotes();
 
 //If a user add a note , add it to localstorage.
 let addBtn = document.getElementById('addBtn');
 let addTitle = document.getElementById('noteTitle');
 let addTxt = document.getElementById('addTxt');
 let hiddenId = document.getElementById('hiddenIdValue');
+
+
+showNotes();
+
 addBtn.addEventListener('click', (e) => {
     let notes = localStorage.getItem('notes');
     if(notes == null) {
@@ -14,17 +17,36 @@ addBtn.addEventListener('click', (e) => {
         notesObj = JSON.parse(notes);
     }
 
-    let notesObject = {'key': addTitle.value, 'value': addTxt.value};
-    notesObj.push(notesObject);
-    // notesObj.push(addTxt.value);
-    localStorage.setItem("notes", JSON.stringify(notesObj));
-    addTxt.value = "";
-    addTitle.value = "";
-    // console.log(notesObj);
-    shoNotes();
+    let formIndexValue = hiddenId.value;
+
+        if(formIndexValue) {
+            notesObj[formIndexValue]['key'] = addTitle.value;
+            notesObj[formIndexValue]['value'] = addTxt.value;
+            localStorage.setItem("notes", JSON.stringify(notesObj));
+            addTxt.value = "";
+            addTitle.value = "";
+            hiddenIdValue.value = "";
+        } else {
+                let notesObject = {
+                    key: addTitle.value, 
+                    value: addTxt.value
+                };
+                notesObj.push(notesObject);
+                // notesObj.push(addTxt.value);
+                localStorage.setItem("notes", JSON.stringify(notesObj));
+                addTxt.value = "";
+                addTitle.value = "";
+        }
+    window.scrollTo(0,document.body.scrollHeight);
+    showNotes();
 });
 // function  to show elements from localStorage
-function shoNotes() {
+function showNotes() {
+    if(hiddenId.value) {
+        addBtn.innerHTML = 'Update Note';
+    } else  {
+        addBtn.innerHTML = 'Add Note';
+    }
     let notes = localStorage.getItem('notes');
     if(notes == null) {
         notesObj = [];
@@ -64,7 +86,7 @@ function deleteNote(index) {
     }
     notesObj.splice(index, 1);
     localStorage.setItem("notes", JSON.stringify(notesObj));
-    shoNotes();
+    showNotes();
 }
 
 // search the respective note.
@@ -87,8 +109,8 @@ search.addEventListener('input', () => {
 
 
 // functions to edit a card note
-
 function editCardNote(index){
+    window.scrollTo(0,0);
     let notes = localStorage.getItem("notes");
     if (notes == null) {
         notesObj = [];
@@ -100,11 +122,15 @@ function editCardNote(index){
     addTitle.value = notesObj[index].key;
     
     hiddenId.value = index;
+    if(hiddenId.value) {
+        addBtn.innerHTML = 'Update Note';
+    } else  {
+        addBtn.innerHTML = 'Add Note';
+    }
     console.log(notesObj[index].key + " " + notesObj[index].value + " " + hiddenId.value);
 }
 
 //Mark note as Important;
-
 function markImportant(ev) {
     console.log(ev);
     let clickImp = document.getElementById(ev);
